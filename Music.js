@@ -1,9 +1,9 @@
 function playSound(){
-  soundtrack.setLoop(true);
-  soundtrack.play();
+  music.song.setLoop(true);
+  music.song.play();
 }
 
 function introMusic(){
-  soundtrack.stop();
-  soundtrack.setPath("resources/soundtrack/title_theme.mp3", playSound);
+  music.song.stop();
+  music.song.setPath("resources/soundtrack/title_theme.mp3", playSound);
 }
