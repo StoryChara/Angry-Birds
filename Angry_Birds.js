@@ -4,6 +4,7 @@ let engine, world, ground, bird, slingShot, boxes = [], mc;
 let scenarios, sprites, music, font;
 let birdsXgame = 0;
 let menu = 'Start_Game';
+let material_wood, material_ice, material_grass;
 
 function preload(){
   scenarios = {
@@ -39,6 +40,10 @@ function setup() {
   const canvas = createCanvas(800, 450);
   canvas.parent('canvas-container');
   
+  material_wood = { img: sprites.wood, opacidad: 255, escala: 0.1 };
+  material_ice = { img: sprites.ice, opacidad: 125, escala: 0.1 };
+  material_grass = { img: sprites.grass, opacidad: 255, escala: 0.5 };
+  
   engine = Engine.create();
   world = engine.world;
   
@@ -72,9 +77,16 @@ function draw() {
 
 function mousePressed() {
   if (menu === "Start_Game") {
-    //menu = "Intro";
-    menu = "Level";
+    menu = "Intro";
     introMusic();
-    create_lvl1()
+  }
+}
+
+function keyPressed(){
+  if (menu === "Intro"){
+    if (keyCode === 32){
+      menu = "Level";
+      create_lvl1();
+    }
   }
 }

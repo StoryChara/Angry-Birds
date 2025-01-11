@@ -9,10 +9,14 @@ function start_game(){
 
 function menu_intro(){
   image(scenarios.start, 0, 0);
+  fill(255);
+  textFont(font.Curve);
+  textAlign(CENTER, CENTER);
+  fill(255); stroke(0); strokeWeight(5); textSize(15);
+  text("Press SPACE to continue", (width / 2), ((3*height)/4)+25);
 }
 
 function level(){
-  //background (128);
   push();
   imageMode(CORNER);
   image(scenarios.sky, 0, 0, width, height)

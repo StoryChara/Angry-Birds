@@ -1,8 +1,8 @@
 class Box {
-  constructor(x, y, w, h, img, op, scale, options={}){
+  constructor(x, y, w, h, prop, options={}){
     this.body = Bodies.rectangle(x, y, w, h, options);
-    this.w = w;  this.h = h; this.img = img; this.op = op; this.scale = scale;
-    this.pattern = createPattern(img, w, h, scale);
+    this.w = w;  this.h = h; this.img = prop.img; this.op = prop.opacidad; this.scale = prop.escala;
+    this.pattern = createPattern(this.img, w, h, this.scale);
     World.add(world, this.body);
   }
   
@@ -19,8 +19,8 @@ class Box {
 }
 
 class Ground extends Box {
-  constructor(x, y, w, h, img, op, scale){
-    super(x, y, w, h, img, op, scale, {isStatic: true});
+  constructor(x, y, w, h, prop){
+    super(x, y, w, h, prop, {isStatic: true});
   }
 }
 
@@ -99,6 +99,7 @@ class SlingShot {
        this.sling.pointA.x + 10) {
        this.sling.bodyB.collisionFilter.category = 1
        this.sling.bodyB = null;
+       birdFlySE();
     }
   }
   
