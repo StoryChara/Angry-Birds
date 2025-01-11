@@ -5,6 +5,7 @@ let scenarios, sprites, music, font;
 let birdsXgame = 0;
 let menu = 'Start_Game';
 let material_wood, material_ice, material_grass;
+let story_x;
 
 function preload(){
   scenarios = {
@@ -84,6 +85,8 @@ function draw() {
     start_game();
   } else if (menu === 'Intro'){
     menu_intro();
+  } else if (menu === "Story"){
+    menu_story();    
   } else if (menu === 'Level'){
     level();
   }
@@ -99,8 +102,9 @@ function mousePressed() {
 function keyPressed(){
   if (menu === "Intro"){
     if (keyCode === 32){
-      menu = "Level";
-      create_lvl1();
+      storyMusic();
+      menu = "Story";
+      story_x = 0;
     }
   }
 }

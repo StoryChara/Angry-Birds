@@ -14,7 +14,31 @@ function introMusic(){
   music.song.setPath("resources/soundtrack/title_theme.mp3", playSound);
 }
 
+function storyMusic(){
+  music.song.stop();
+  music.song.setLoop(false);
+  music.song.setPath("resources/soundtrack/birds_intro.mp3", () => {
+    music.song.play();
+    music.song.onended(function () {
+      menu = "Level";
+      create_lvl1();
+      levelMusic();
+      startLevelSE();
+    });
+  });
+}
+
+function levelMusic(){
+  music.song.stop();
+  music.song.setPath("resources/soundtrack/ambient_white_dryforest.mp3", playSound);
+}
+
 //----------------------------------------------------------------------//
+
+function startLevelSE() {
+  music.se.stop();
+  music.se.setPath("resources/sound_effect/bird_next_military.mp3", playSE);
+}
 
 function birdFlySE() {
   music.se.stop();

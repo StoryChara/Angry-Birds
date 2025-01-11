@@ -16,6 +16,11 @@ function menu_intro(){
   text("Press SPACE to continue", (width / 2), ((3*height)/4)+25);
 }
 
+function menu_story(){
+  image(scenarios.story, story_x, 0);
+  if (story_x > -686){ story_x -= 0.9; }
+}
+
 function level(){
   push();
   imageMode(CORNER);

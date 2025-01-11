@@ -26,6 +26,8 @@ function create_lvl1() {
   boxes[12] = new Box(605+translado, 120, 14, 40, material_wood);
   boxes[13] = new Box(710+translado, 410, 14, 40, material_wood); 
   
-  pig[0] = new Pig(605+traslado, 288, 15, 2, sprites.pig);
+  pigs[0] = new Pig(605+translado, 250, 15, 2, sprites.pig);
+  
+  
   
 }
