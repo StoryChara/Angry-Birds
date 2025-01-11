@@ -32,7 +32,7 @@ function level(){
   bird.show();
   slingShot.show();
   for (const box of boxes){ box.show(); }
+  for (const pig of pigs) { pig.show(); }
   
   push(); imageMode(CENTER); image(sprites.slingshot_f, 155, 390, 50, 100); pop();
-
 }

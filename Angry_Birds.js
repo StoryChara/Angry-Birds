@@ -1,5 +1,5 @@
 const {Engine, World, Bodies, Body, Constraint, Mouse, MouseConstraint} = Matter;
-let engine, world, ground, bird, slingShot, boxes = [], mc;
+let engine, world, ground, bird, slingShot, boxes = [], pigs = [], mc;
 
 let scenarios, sprites, music, font;
 let birdsXgame = 0;
@@ -40,9 +40,23 @@ function setup() {
   const canvas = createCanvas(800, 450);
   canvas.parent('canvas-container');
   
-  material_wood = { img: sprites.wood, opacidad: 255, escala: 0.1 };
-  material_ice = { img: sprites.ice, opacidad: 125, escala: 0.1 };
-  material_grass = { img: sprites.grass, opacidad: 255, escala: 0.5 };
+  material_wood = { 
+    img: sprites.wood, 
+    opacidad: 255, 
+    escala: 0.1 
+  };
+  
+  material_ice = { 
+    img: sprites.ice, 
+    opacidad: 125, 
+    escala: 0.1 
+  };
+  
+  material_grass = { 
+    img: sprites.grass, 
+    opacidad: 255, 
+    escala: 0.5 
+  };
   
   engine = Engine.create();
   world = engine.world;

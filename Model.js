@@ -54,6 +54,31 @@ class Bird {
   }
 }
 
+class Pig {
+  constructor(x, y, r, mass, img){
+    this.body = Bodies.circle( x, y, r, {
+      restitution: 0.5,
+      });
+    this.img = img;
+    Body.setMass(this.body, mass);
+    World.add(world, this.body);
+  }
+  
+  show(){
+    push();
+    imageMode(CENTER);
+    translate(this.body.position.x,
+      this.body.position.y);
+    rotate(this.body.angle);
+   if (this.img) {
+      image(this.img, 0, 0, 2 * this.body.circleRadius, 2 * this.body.circleRadius);
+    } else {
+      console.error('Imagen no definida en Pig.show()');
+    }
+    pop();
+  }
+}
+
 class SlingShot {
   constructor(bird) {
     this.sling = Constraint.create({
