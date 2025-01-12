@@ -1,4 +1,4 @@
-const {Engine, World, Bodies, Body, Constraint, Mouse, MouseConstraint} = Matter;
+const { Engine, World, Bodies, Body, Constraint, Mouse, MouseConstraint, Events } = Matter;
 let engine, world, ground, bird, slingShot, boxes = [], pigs = [], mc;
 
 let scenarios, sprites, music, font;
@@ -6,6 +6,7 @@ let birdsXgame = 0;
 let menu = 'Start_Game';
 let material_wood, material_ice, material_grass;
 let story_x;
+let score = 0;
 
 function preload(){
   scenarios = {
@@ -64,6 +65,8 @@ function setup() {
   
   const mouse = Mouse.create(canvas.elt);
   mouse.pixelRatio = pixelDensity();
+
+  Matter.Events.on(engine, "collisionStart", handleCollision);
   
   mc = MouseConstraint.create(
     engine, {
@@ -89,6 +92,8 @@ function draw() {
     menu_story();    
   } else if (menu === 'Level'){
     level();
+    drawResetButton(); 
+    drawScore();
   }
 }
 
@@ -97,6 +102,8 @@ function mousePressed() {
     menu = "Intro";
     introMusic();
   }
+} else if (isMouseOverResetButton()) {
+        resetGame(); // Lógica de reinicio
 }
 
 function keyPressed(){
@@ -107,4 +114,32 @@ function keyPressed(){
       story_x = 0;
     }
   }
+}
+
+function drawScore() {
+    push();
+    fill(0, 255, 0); // Verde
+    stroke(0);
+    strokeWeight(2);
+    rect(width - 110, 10, 100, 30, 5); // Recuadro verde en la esquina superior derecha
+    fill(0); // Texto negro
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(14);
+    text(`Score: ${score}`, width - 60, 25); // Mostrar el puntaje actual
+    pop();
+}
+
+function drawResetButton() {
+    push();
+    fill(255, 165, 0); // Naranja
+    stroke(0);
+    strokeWeight(2);
+    rect(10, 10, 100, 30, 5); // Botón con bordes redondeados
+    fill(0);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(14);
+    text("Reiniciar", 60, 25); // Texto centrado en el botón
+    pop();
 }
