@@ -4,6 +4,8 @@ let engine, world, ground, bird, slingShot, boxes = [], mc;
 let scenarios, sprites, music, font;
 let birdsXgame = 0;
 let menu = 'Start_Game';
+let material_wood, material_ice, material_grass;
+let story_x;
 let score = 0;
 
 function preload(){
@@ -40,6 +42,24 @@ function setup() {
   const canvas = createCanvas(800, 450);
   canvas.parent('canvas-container');
   
+  material_wood = { 
+    img: sprites.wood, 
+    opacidad: 255, 
+    escala: 0.1 
+  };
+  
+  material_ice = { 
+    img: sprites.ice, 
+    opacidad: 125, 
+    escala: 0.1 
+  };
+  
+  material_grass = { 
+    img: sprites.grass, 
+    opacidad: 255, 
+    escala: 0.5 
+  };
+  
   engine = Engine.create();
   world = engine.world;
   
@@ -66,6 +86,8 @@ function draw() {
   stroke(0); strokeWeight(1);
   if (menu === 'Start_Game'){
     start_game();
+  } else if (menu === 'Story'){
+    menu_story();
   } else if (menu === 'Intro'){
     menu_intro();
   } else if (menu === 'Level'){
@@ -77,12 +99,25 @@ function draw() {
 
 function mousePressed() {
     if (menu === "Start_Game") {
-        menu = "Level";
-        introMusic();
-        create_lvl1();
+      menu = "Intro";
+      introMusic();
     } else if (isMouseOverResetButton()) {
-        resetGame(); // Lógica de reinicio
+      resetGame(); // Lógica de reinicio
     }
+}
+
+function keyPressed(){
+  if (menu === "Intro"){
+    if (keyCode === 32){
+      storyMusic();
+      menu = "Story";
+      story_x = 0;
+    }
+  }
+  
+  if (key === 'R' || key === 'r') {
+        resetGame();
+  }
 }
 
 function drawScore() {
