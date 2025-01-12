@@ -7,7 +7,7 @@ function create_lvl1() {
   bird = new Bird(150, 350, 15, 2, sprites.red);
   slingShot = new SlingShot(bird);
   
-  //translado = 250;
+  translado = -150;
 
   // 430: limite en y
   boxes = [

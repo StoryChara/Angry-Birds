@@ -125,8 +125,7 @@ class Pig {
       
         if (this.isDestroyed && millis() > this.showScoreUntil) {
           this.destroy();
-        }
-        
+        } 
         push();
         imageMode(CENTER);
         translate(this.body.position.x, this.body.position.y);
@@ -139,21 +138,21 @@ class Pig {
         }
         pop();
         
+        
         if (millis() < this.showScoreUntil) {
           push();
-          console.log("5000!");
+          textFont(font.Angry);
           textAlign(CENTER, CENTER);
-          textSize(25);
-          fill(109, 226, 73);
+          textSize(30);
+          fill(109, 226, 73); stroke(0), strokeWeight(2);
           text("5000", this.body.position.x, this.body.position.y - this.r - 10);
           pop();
         }
     }
     
     show_score() {
-        this.showScoreUntil = millis() + 1000;
+        this.showScoreUntil = millis() + 250;
         this.isDestroyed = true; // Marca el cerdo como "muerto"
-        console.log("+5000!");
     }
 
     reduceHealth(amount) {
