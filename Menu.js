@@ -37,7 +37,12 @@ function level(){
   bird.show();
   slingShot.show();
   for (const box of boxes){ box.show(); }
-  for (const pig of pigs) { pig.show(); }
+    for (const pig of pigs) {
+        pig.show();
+        if (pig.isSignificantFall()) {
+            pig.reduceHealth(50); 
+        }
+    }
   
   push(); imageMode(CENTER); image(sprites.slingshot_f, 155, 390, 50, 100); pop();
 }

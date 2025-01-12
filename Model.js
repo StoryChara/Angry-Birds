@@ -54,31 +54,6 @@ class Bird {
   }
 }
 
-class Pig {
-  constructor(x, y, r, mass, img){
-    this.body = Bodies.circle( x, y, r, {
-      restitution: 0.5,
-      });
-    this.img = img;
-    Body.setMass(this.body, mass);
-    World.add(world, this.body);
-  }
-  
-  show(){
-    push();
-    imageMode(CENTER);
-    translate(this.body.position.x,
-      this.body.position.y);
-    rotate(this.body.angle);
-   if (this.img) {
-      image(this.img, 0, 0, 2 * this.body.circleRadius, 2 * this.body.circleRadius);
-    } else {
-      console.error('Imagen no definida en Pig.show()');
-    }
-    pop();
-  }
-}
-
 class SlingShot {
   constructor(bird) {
     this.sling = Constraint.create({
@@ -130,5 +105,79 @@ class SlingShot {
   
   attach(bird) {
     this.sling.bodyB = bird.body;
+  }
+}
+
+class Pig {
+    constructor(x, y, r, img, health) {
+        this.body = Bodies.circle(x, y, r, {
+            restitution: 0.5
+        });
+        this.r = r;
+        this.img = img;
+        this.health = health || 125;
+        this.showScoreUntil = 0;
+        this.isDestroyed = false; // Indica si está "muerto" pero visible
+        World.add(world, this.body);
+    }
+
+    show() {
+      
+        if (this.isDestroyed && millis() > this.showScoreUntil) {
+          this.destroy();
+        }
+        
+        push();
+        imageMode(CENTER);
+        translate(this.body.position.x, this.body.position.y);
+        rotate(this.body.angle);
+        if (this.img) {
+            image(this.img, 0, 0, 2 * this.r, 2 * this.r);
+        } else {
+            fill(0, 255, 0);
+            ellipse(0, 0, 2 * this.r);
+        }
+        pop();
+        
+        if (millis() < this.showScoreUntil) {
+          push();
+          console.log("5000!");
+          textAlign(CENTER, CENTER);
+          textSize(25);
+          fill(109, 226, 73);
+          text("5000", this.body.position.x, this.body.position.y - this.r - 10);
+          pop();
+        }
+    }
+    
+    show_score() {
+        this.showScoreUntil = millis() + 1000;
+        this.isDestroyed = true; // Marca el cerdo como "muerto"
+        console.log("+5000!");
+    }
+
+    reduceHealth(amount) {
+      if (millis() - gameStartTime > 2000) { // Verificar si han pasado más de 2 segundos
+          this.health -= amount;
+          console.log(`Salud reducida a ${this.health}`);
+          if (this.health <= 0) {
+              this.show_score();
+              score += 25;
+          }
+      }
+  }
+
+    destroy() {
+        console.log("Cerdo destruido.");
+        pigDestroySE();
+        World.remove(world, this.body);
+        pigs = pigs.filter(pig => pig !== this); 
+    }
+
+    isSignificantFall() {
+      const velocity = this.body.velocity;
+      const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
+      return speed > 5; 
+
   }
 }

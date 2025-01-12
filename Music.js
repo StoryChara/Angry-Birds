@@ -55,3 +55,27 @@ function birdFlySE() {
     });
   });
 }
+
+//----------------------------------------------------------------------//
+
+function pigDamageSE(){
+  music.pig.stop();
+  music.pig.setPath("resources/sound_effect/piglette_damage.mp3", () => {
+    music.pig.play();
+    music.pig.onended(function() {
+        music.pig.stop();
+    });
+  });
+}
+
+function pigDestroySE(){
+  music.pig.stop();
+  music.pig.setPath("resources/sound_effect/piglette_destroyed.mp3", () => {
+    music.pig.play();
+    music.pig.onended(function() {
+        music.pig.stop();
+    });
+  });
+}
+
+//----------------------------------------------------------------------//
