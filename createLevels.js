@@ -100,6 +100,5 @@ function resetGame() {
     gameStartTime = millis();
     setup();
     menu = "Level";
-    introMusic();
     create_lvl1()
 }
