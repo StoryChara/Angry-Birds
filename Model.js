@@ -63,7 +63,7 @@ class SlingShot {
         },
         bodyB: bird.body,
         stiffness: 0.05,
-        length: 5
+        length: 2
       });
       World.add(world, this.sling);
     }
@@ -100,11 +100,13 @@ class SlingShot {
          this.sling.bodyB.collisionFilter.category = 1
          this.sling.bodyB = null;
          birdFlySE();
+         birdLaunched = true;
       }
     }
     
     attach(bird) {
       this.sling.bodyB = bird.body;
+      birdLaunched = false;
     }
   }
   
@@ -122,6 +124,7 @@ class Pig {
         this.r = r;
         this.img = img;
         this.health = health || 125;
+        this.isDead = false;
         World.add(world, this.body);
     }
 
