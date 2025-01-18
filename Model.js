@@ -4,6 +4,7 @@ class Box {
     this.w = w;  this.h = h; this.img = prop.img; this.op = prop.opacidad; this.scale = prop.escala;
     this.pattern = createPattern(this.img, w, h, this.scale);
     World.add(world, this.body);
+    this.health=105;
   }
   
   show(){
@@ -15,6 +16,33 @@ class Box {
     //rectMode(CENTER); rect(0, 0, this.w, this.h);
     imageMode(CENTER); tint(255, this.op); image(this.pattern, 0, 0, this.w, this.h);
     pop();
+  }
+
+  reduceHealth(amount) {
+    if (millis() - gameStartTime > 2000) { // Verificar si han pasado más de 2 segundos
+        this.health -= amount;
+        console.log(`Salud de box reducida a ${this.health}`);
+        if (this.health <= 0) {
+            this.destroy();
+            score += 25;
+        }
+    }
+}
+
+  destroy() {
+      console.log("Box destruido.");
+      World.remove(world, this.body);
+      boxes = boxes.filter(box => box !== this); 
+  }
+
+  isSignificantFall() {
+    const velocity = this.body.velocity;
+    const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
+    return speed > 5; 
+  }
+  onHit(){
+    if (this.health>85 && this.prop==="wood") console.log("Cambiar sprite a");
+    //a;adir mas
   }
 }
 
@@ -51,6 +79,11 @@ class Bird {
       /*ellipse(this.body.position.x, this.body.position.y,
               2*this.body.circleRadius, 2*this.body.circleRadius);*/
       pop();
+    }
+
+    onHit(){
+      console.log("Cambiar sprite a golpeada");
+      //a;adir mas
     }
 }
 

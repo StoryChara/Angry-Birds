@@ -248,7 +248,7 @@ function drawBirdPath() {
   pop();
 }
 
-function handleCollision(event) {
+/*function handleCollision(event) {
   const pairs = event.pairs;
   for (let i = 0; i < pairs.length; i++) {
       const pair = pairs[i];
@@ -256,7 +256,7 @@ function handleCollision(event) {
           birdHasCollided = true;
       }
   }
-}
+}*/
 
 function toggleFullscreen() {
     let fs = fullscreen();
