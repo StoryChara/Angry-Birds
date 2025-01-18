@@ -134,22 +134,61 @@ function isMouseOverNextLevelButton() {
     fullscreen(!fs);
   }
 
-function handleCollision(event) {
-    event.pairs.forEach(({ bodyA, bodyB }) => {
+  function handleCollision() {
+    // Handle collision between bird and pig
+  
         pigs.forEach(pig => {
-            if (bodyA === pig.body || bodyB === pig.body) {
-                console.log(`Colisión detectada con un cerdo. Salud actual: ${pig.health}`);
+            if (Matter.Collision.collides(bird.body, pig.body) != null) {
+                console.log("Colisión detectada entre un pájaro y un cerdo.");
                 if (pig.health > 0) {
-                    pig.reduceHealth(25);
+                    pig.reduceHealth(30);
+                    if (pig.isSignificantFall()) pig.reduceHealth(20); 
                     if (pig.health <= 0) {
                         console.log("Cerdo eliminado. Incrementando puntaje.");
-                        //score += 25;
+                        //score += 50; // Uncomment to update score
                     }
                 }
+                if (bird.onHit) bird.onHit(); // Apply effects to the bird if needed
+            }
+        });
+  
+
+    // Handle collision between bird and box
+
+        boxes.forEach(box => {
+            if (Matter.Collision.collides(bird.body, box.body) != null) {
+                console.log("Colisión detectada entre un pájaro y una caja.");
+                if (box.health > 0) {
+                  box.reduceHealth(50);
+                  box.onHit(); // aca se hace el cambio de sprite segun el da;o 
+                  if (box.health <= 0) {
+                      console.log("Caja eliminada. Incrementando puntaje.");
+                      box.destroy();
+                      //score += 50; // Uncomment to update score
+                  }
+              }
+                if (bird.onHit) bird.onHit(); // Apply effects to the bird if needed
+            }
+        });
+   
+
+    // Handle collision between pig and box
+    pigs.forEach(pig => {
+        boxes.forEach(box => {
+            if (Matter.Collision.collides(pig.body, box.body) != null) {
+                console.log("Colisión detectada entre un cerdo y una caja.");
+                if (pig.isSignificantFall()){
+                  pig.reduceHealth(10);
+                  box.reduceHealth(15);
+
+                } 
             }
         });
     });
 }
+
+
+
 
 function ajustes(){
 
