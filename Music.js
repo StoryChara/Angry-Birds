@@ -21,9 +21,8 @@ function storyMusic(){
     music.song.play();
     music.song.onended(function () {
       menu = "Level";
-      create_lvl1();
+      create_lvl(actual_level);
       levelMusic();
-      startLevelSE();
     });
   });
 }
@@ -42,7 +41,7 @@ function startLevelSE() {
 
 function birdFlySE() {
   music.se.stop();
-  music.se.setPath("resources/sound_effect/bird_shot-a1.mp3", () => {
+  music.se.setPath("resources/sound_effect/bird_shot.mp3", () => {
     music.se.play();
     music.se.onended(function() {
         music.se.stop();

@@ -1,5 +1,5 @@
 const { Engine, World, Bodies, Body, Constraint, Mouse, MouseConstraint, Events } = Matter;
-let engine, world, ground, bird, slingShot, boxes = [], mc;
+let engine, world, ground, bird, slingShot, boxes = [], pigs = [],  mc;
 
 let scenarios, sprites, music, font;
 let birdsXgame = 0;
@@ -14,6 +14,7 @@ let birdHasCollided = false;
 let birdLaunched = false;
 let showScoreScreen = false;
 let showGameFinishedScreen = false;
+let actual_level = 1;
 
 function preload(){
   scenarios = {
@@ -43,6 +44,21 @@ function preload(){
     Angry: loadFont('resources/others/angrybirds-regular.ttf'),
     Curve: loadFont('resources/others/KOMIKAX_.ttf')
   }
+  
+  wood_damaged = loadSound('resources/sound_effect/wood_collision.mp3');
+  wood_destroy = loadSound('resources/sound_effect/wood_destroyed.mp3');
+  
+  ice_damaged = loadSound('resources/sound_effect/ice_collision.mp3');
+  ice_destroy = loadSound('resources/sound_effect/ice_destroyed.mp3');
+  
+  stone_damaged = loadSound('resources/sound_effect/rock_collision.mp3');
+  stone_destroy = loadSound('resources/sound_effect/rock_destroyed.mp3');
+  
+  pig_damaged = loadSound('resources/sound_effect/piglette_damage.mp3');
+  pig_destroy = loadSound('resources/sound_effect/piglette_destroyed.mp3');
+  
+  red_damaged = loadSound('resources/sound_effect/bird_01_collision.mp3');
+  red_destroy = loadSound('resources/sound_effect/bird_destroyed.mp3');
 }
 
 function setup() {
@@ -52,20 +68,50 @@ function setup() {
   material_wood = { 
     img: sprites.wood, 
     opacidad: 255, 
-    escala: 0.1 
+    escala: 0.1,
+    health: 100,
+    damaged: wood_damaged,
+    destroy: wood_destroy
   };
   
   material_ice = { 
     img: sprites.ice, 
     opacidad: 125, 
-    escala: 0.1 
+    escala: 0.1,
+    health: 75,
+    damaged: ice_damaged,
+    destroy: ice_destroy
+  };
+  
+  material_stone = { 
+    img: sprites.stone, 
+    opacidad: 255, 
+    escala: 0.1,
+    health: 125,
+    damaged: stone_damaged,
+    destroy: stone_destroy
   };
   
   material_grass = { 
     img: sprites.grass, 
     opacidad: 255, 
-    escala: 0.5 
+    escala: 0.5,
+    health: 9999999999999999
   };
+  
+  pig_normal = {
+    img: sprites.pig,
+    health: 100,
+    damaged: pig_damaged,
+    destroy: pig_destroy
+  };
+  
+  bird_red = {
+    mass: 2,
+    img: sprites.red,
+    damaged: red_damaged,
+    destroy: red_destroy
+  }
   
   engine = Engine.create();
   world = engine.world;
@@ -121,17 +167,6 @@ function draw() {
   }
 }
 
-function drawPreviousBirdPath() {
-  push();
-  stroke(200);
-  strokeWeight(5);
-  noFill();
-  for (let i = 0; i < previousBirdPath.length; i++) {
-      point(previousBirdPath[i].x, previousBirdPath[i].y);
-  }
-  pop();
-}
-
 function mousePressed() {
   if (menu === "Start_Game") {
       introMusic();
@@ -170,121 +205,10 @@ function keyPressed(){
       story_x = 0;
   }
   
-  if (key === 'R' || key === 'r') {
-        resetGame();
-  }
- /*if (menu === 'Story' && keyCode === 32) {
-      storyHoldTimer = setTimeout(() => {
-          menu = 'Level';
-          draw()
-      }, 3000); // 3 segundos
-  }*/
-}
-
-
-function drawScore() {
-    const scoreButtonSizeW = width*0.13;
-    const scoreButtonSizeH = height*0.05;
-    const scoreButtonX = width*0.85;
-    const scoreButtonY = height*0.02;
-    push();
-    fill(0, 255, 0); // Verde
-    stroke(0);
-    strokeWeight(2);
-    rect(scoreButtonX, scoreButtonY, scoreButtonSizeW, scoreButtonSizeH, 5); // Recuadro verde en la esquina superior derecha
-    fill(0); // Texto negro
-    noStroke();
-    textAlign(CENTER, CENTER);
-    textSize(scoreButtonSizeH*0.7);
-    text(`Score: ${score}`, scoreButtonX+scoreButtonSizeW/2, scoreButtonSizeH*0.7); // Mostrar el puntaje actual
-    pop();
-}
-
-function drawSettingsButton() {
-    const settingsButtonSizeW = width*0.13;
-    const settingsButtonSizeH = height*0.05;
-    const settingsButtonX = width*0.02;
-    const settingsButtonY = height*0.02;
-  
-    push();
-    fill(0, 0, 255);
-    stroke(0);
-    strokeWeight(2);
-    rect(settingsButtonX, settingsButtonY, settingsButtonSizeW,settingsButtonSizeH, 5);
-    fill(0);
-    noStroke()
-    textAlign(CENTER, CENTER);
-    textSize(settingsButtonSizeH*0.7);
-    text("Ajustes", settingsButtonX + settingsButtonSizeW / 2, settingsButtonSizeH*0.7);
-    pop();
-}
-function drawResetButton() {
-    const resetButtonSizeW = width*0.13;
-    const resetButtonSizeH = height*0.05;
-    const resetButtonX = width*0.17;
-    const resetButtonY = height*0.02;
-  push();
-  fill(255, 0, 0);
-  stroke(0);
-  strokeWeight(2);
-  rect(resetButtonX, resetButtonY, resetButtonSizeW, resetButtonSizeH, 5);
-  fill(0);
-  noStroke()
-  textAlign(CENTER, CENTER);
-  textSize(resetButtonSizeH*0.7);
-  text("Reset", resetButtonX + resetButtonSizeW / 2, resetButtonSizeH*0.7);
-  pop();
-}
-
-
-function drawBirdPath() {
-  push();
-  stroke(255);
-  strokeWeight(5);
-  noFill();
-  for (let i = 0; i < birdPath.length; i++) {
-      point(birdPath[i].x, birdPath[i].y);
-  }
-  pop();
-}
-
-/*function handleCollision(event) {
-  const pairs = event.pairs;
-  for (let i = 0; i < pairs.length; i++) {
-      const pair = pairs[i];
-      if (pair.bodyA === bird.body || pair.bodyB === bird.body) {
-          birdHasCollided = true;
-      }
-  }
-}*/
-
-function toggleFullscreen() {
-    let fs = fullscreen();
-    fullscreen(!fs);
-    // if (!fs) {
-    //     resizeCanvas(windowWidth, windowHeight);
-    //     updateElementsSize(windowWidth, windowHeight);
-    // } else {
-    //     resizeCanvas(1600, 900); // Restore to original size
-    //     updateElementsSize(1600, 900);
-    // }
-}
-
-function updateElementsSize(newWidth, newHeight) {
-    // Update the size and position of elements based on the new canvas size
-    ground = new Ground(newWidth / 2, newHeight - 10, newWidth, 20, material_grass);
-    
-    if (bird) {
-        Body.setPosition(bird.body, { x: newWidth * 0.1, y: newHeight * 0.5 });
+  if (menu === "Level"){
+    if (key === 'R' || key === 'r') {
+          resetGame();
     }
-
-    pigs.forEach(pig => {
-        Body.setPosition(pig.body, { x: pig.body.position.x * (newWidth / width), y: pig.body.position.y * (newHeight / height) });
-    });
-
-    boxes.forEach(box => {
-        Body.setPosition(box.body, { x: box.body.position.x * (newWidth / width), y: box.body.position.y * (newHeight / height) });
-    });
-
-    // Update other elements similarly...
+  }
+  
 }

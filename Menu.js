@@ -34,9 +34,9 @@ function level() {
     image(scenarios.sky, 0, 0, width, height);
     pop();
 
-    push(); 
+    push();
     imageMode(CENTER);
-    image(sprites.slingshot_b,width *0.2,height*0.75, height * 0.1,height * 0.20);
+    image(sprites.slingshot_b, 155, 390, 50, 100);
     pop();
 
     Engine.update(engine);
@@ -57,6 +57,6 @@ function level() {
 
     push();
     imageMode(CENTER);
-    image(sprites.slingshot_f,width *0.2,height*0.75, height * 0.1,height * .2);
+    image(sprites.slingshot_f, 155, 390, 50, 100);
     pop();
 }

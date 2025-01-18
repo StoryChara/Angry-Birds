@@ -1,10 +1,16 @@
 class Box {
   constructor(x, y, w, h, prop, options={}){
     this.body = Bodies.rectangle(x, y, w, h, options);
-    this.w = w;  this.h = h; this.img = prop.img; this.op = prop.opacidad; this.scale = prop.escala;
+    this.w = w;  
+    this.h = h; 
+    this.img = prop.img; 
+    this.op = prop.opacidad; 
+    this.scale = prop.escala;
     this.pattern = createPattern(this.img, w, h, this.scale);
+    this.damage = prop.damaged;
+    this.destro = prop.destroy;
     World.add(world, this.body);
-    this.health=105;
+    this.health= prop.health;
   }
   
   show(){
@@ -21,8 +27,12 @@ class Box {
   reduceHealth(amount) {
     if (millis() - gameStartTime > 2000) { // Verificar si han pasado más de 2 segundos
         this.health -= amount;
+        this.damage.setVolume(0.1);
+        this.damage.play();
         console.log(`Salud de box reducida a ${this.health}`);
         if (this.health <= 0) {
+            this.destro.setVolume(0.1);
+            this.destro.play();
             this.destroy();
             score += 25;
         }
@@ -37,13 +47,16 @@ class Box {
 
   isSignificantFall() {
     const velocity = this.body.velocity;
-    const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
+    const speed = Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
     return speed > 5; 
   }
+  
   onHit(){
-    if (this.health>85 && this.prop==="wood") console.log("Cambiar sprite a");
-    //a;adir mas
+    if (this.health>85 && this.prop==="wood") {
+      console.log("Cambiar sprite a")
+    }
   }
+  
 }
 
 class Ground extends Box {
@@ -53,16 +66,18 @@ class Ground extends Box {
 }
 
 class Bird {
-    constructor(x, y, r, mass, img){
+    constructor(x, y, r, prop){
       this.body = Bodies.circle( x, y, r, {
         restitution: 0.7,
         collisionFilter: {
           category: 2
         }
         });
-      this.img = img;
-      Body.setMass(this.body, mass);
+      this.img = prop.img;
+      Body.setMass(this.body, prop.mass);
       World.add(world, this.body);
+      this.damage = prop.damaged;
+      this.destro = prop.destroy;
     }
     
     show(){
@@ -82,8 +97,13 @@ class Bird {
     }
 
     onHit(){
-      console.log("Cambiar sprite a golpeada");
-      //a;adir mas
+      this.damage.setVolume(0.1);
+      this.damage.play();
+    }
+    
+    onDead(){
+      this.destro.setVolume(0.1);
+      this.destro.play();
     }
 }
 
@@ -145,11 +165,8 @@ class SlingShot {
     }
   }
   
-let pigs = []; 
-
-
 class Pig {
-    constructor(x, y, r, img, health) {
+    constructor(x, y, r, prop) {
         this.body = Bodies.circle(x, y, r, {
             restitution: 0.5,
             collisionFilter: {
@@ -157,9 +174,11 @@ class Pig {
             },
         });
         this.r = r;
-        this.img = img;
-        this.health = health || 125;
+        this.img = prop.img;
+        this.health = prop.health || 125;
         this.isDead = false;
+        this.damage = prop.damaged;
+        this.destro = prop.destroy;
         World.add(world, this.body);
     }
 
@@ -187,8 +206,10 @@ class Pig {
     reduceHealth(amount) {
       if (millis() - gameStartTime > 2000) { // Verificar si han pasado más de 2 segundos
           this.health -= amount;
+          this.damage.play();
           console.log(`Salud reducida a ${this.health}`);
           if (this.health <= 0) {
+              this.destro.play();
               this.destroy();
               score += 25;
           }

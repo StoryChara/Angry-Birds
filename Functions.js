@@ -1,5 +1,4 @@
 let isMuted = false; // Add this line at the top of the file
-
 let previousBirdPath = [];
 
 function createPattern(img, w, h, scaleFactor = 1) {
@@ -17,7 +16,7 @@ function createPattern(img, w, h, scaleFactor = 1) {
 }
   
 function generate_Red(){
-    bird = new Bird(150, 350, 15, 2, sprites.red);
+    bird = new Bird(150, 350, 15, bird_red);
     if (birdPath.length > 0) {
         previousBirdPath = birdPath; // Store the current path as the previous path
     }
@@ -39,17 +38,17 @@ function isMouseOverSettingsButton() {
     const settingsButtonSizeH = height*0.05;
     const settingsButtonX = width*0.02;
     const settingsButtonY = height*0.02;
-    return mouseX > settingsButtonX  && mouseX < settingsButtonSizeW +settingsButtonX 
-     && mouseY > settingsButtonY  && mouseY < settingsButtonSizeH+settingsButtonY ;
+    return (mouseX > settingsButtonX  && mouseX < settingsButtonSizeW +settingsButtonX && mouseY > settingsButtonY  && mouseY < settingsButtonSizeH+settingsButtonY);
 }
+
 function isMouseOverResetButton() {
     const resetButtonSizeW = width*0.13;
     const resetButtonSizeH = height*0.05;
     const resetButtonX = width*0.17;
     const resetButtonY = height*0.02;
-    return mouseX > resetButtonX && mouseX < resetButtonSizeW+resetButtonX 
-    && mouseY > resetButtonY && mouseY < resetButtonSizeH+resetButtonY;
+    return (mouseX > resetButtonX && mouseX < resetButtonSizeW+resetButtonX && mouseY > resetButtonY && mouseY < resetButtonSizeH+resetButtonY);
 }
+
 function isMouseOverCloseButton() {
     const closeButtonSize = width*0.05;
     const closeButtonX =  width * 0.15 - closeButtonSize * 2;
@@ -142,13 +141,15 @@ function isMouseOverNextLevelButton() {
                 console.log("Colisión detectada entre un pájaro y un cerdo.");
                 if (pig.health > 0) {
                     pig.reduceHealth(30);
-                    if (pig.isSignificantFall()) pig.reduceHealth(20); 
+                    if (pig.isSignificantFall()) {pig.reduceHealth(20); }
                     if (pig.health <= 0) {
                         console.log("Cerdo eliminado. Incrementando puntaje.");
-                        //score += 50; // Uncomment to update score
+                        score += 5000;
                     }
                 }
-                if (bird.onHit) bird.onHit(); // Apply effects to the bird if needed
+                if (bird.onHit) {
+                   bird.onHit();
+                 } 
             }
         });
   
@@ -167,7 +168,9 @@ function isMouseOverNextLevelButton() {
                       //score += 50; // Uncomment to update score
                   }
               }
-                if (bird.onHit) bird.onHit(); // Apply effects to the bird if needed
+                if (bird.onHit) {
+                  bird.onHit(); 
+                }
             }
         });
    
@@ -180,7 +183,6 @@ function isMouseOverNextLevelButton() {
                 if (pig.isSignificantFall()){
                   pig.reduceHealth(10);
                   box.reduceHealth(15);
-
                 } 
             }
         });
@@ -292,6 +294,7 @@ function launchBird() {
     birdLaunched = true;
     console.log(`Birds remaining: ${birdsXgame}`);
     setTimeout(() => {
+        bird.onDead();
         World.remove(world, bird.body);
         if (birdsXgame > 0) {
             generate_Red();
@@ -303,7 +306,8 @@ function launchBird() {
 }
 
 function nextLevel() {
-    showGameFinished();
+  actual_level ++;
+  create_lvl(actual_level);
 }      
 function showGameFinished() {
   
@@ -389,3 +393,121 @@ function drawSettingsPanel() {
     }
 }
 
+
+function drawScore() {
+    const scoreButtonSizeW = width*0.13;
+    const scoreButtonSizeH = height*0.05;
+    const scoreButtonX = width*0.85;
+    const scoreButtonY = height*0.02;
+    push();
+    fill(0, 255, 0); // Verde
+    stroke(0);
+    strokeWeight(2);
+    rect(scoreButtonX, scoreButtonY, scoreButtonSizeW, scoreButtonSizeH, 5); // Recuadro verde en la esquina superior derecha
+    fill(0); // Texto negro
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(scoreButtonSizeH*0.7);
+    text(`Score: ${score}`, scoreButtonX+scoreButtonSizeW/2, scoreButtonSizeH*0.7); // Mostrar el puntaje actual
+    pop();
+}
+
+function drawSettingsButton() {
+    const settingsButtonSizeW = width*0.13;
+    const settingsButtonSizeH = height*0.05;
+    const settingsButtonX = width*0.02;
+    const settingsButtonY = height*0.02;
+  
+    push();
+    fill(0, 0, 255);
+    stroke(0);
+    strokeWeight(2);
+    rect(settingsButtonX, settingsButtonY, settingsButtonSizeW,settingsButtonSizeH, 5);
+    fill(0);
+    noStroke()
+    textAlign(CENTER, CENTER);
+    textSize(settingsButtonSizeH*0.7);
+    text("Ajustes", settingsButtonX + settingsButtonSizeW / 2, settingsButtonSizeH*0.7);
+    pop();
+}
+function drawResetButton() {
+    const resetButtonSizeW = width*0.13;
+    const resetButtonSizeH = height*0.05;
+    const resetButtonX = width*0.17;
+    const resetButtonY = height*0.02;
+  push();
+  fill(255, 0, 0);
+  stroke(0);
+  strokeWeight(2);
+  rect(resetButtonX, resetButtonY, resetButtonSizeW, resetButtonSizeH, 5);
+  fill(0);
+  noStroke()
+  textAlign(CENTER, CENTER);
+  textSize(resetButtonSizeH*0.7);
+  text("Reset", resetButtonX + resetButtonSizeW / 2, resetButtonSizeH*0.7);
+  pop();
+}
+
+
+function drawBirdPath() {
+  push();
+  stroke(255);
+  strokeWeight(5);
+  noFill();
+  for (let i = 0; i < birdPath.length; i++) {
+      point(birdPath[i].x, birdPath[i].y);
+  }
+  pop();
+}
+
+/*function handleCollision(event) {
+  const pairs = event.pairs;
+  for (let i = 0; i < pairs.length; i++) {
+      const pair = pairs[i];
+      if (pair.bodyA === bird.body || pair.bodyB === bird.body) {
+          birdHasCollided = true;
+      }
+  }
+}*/
+
+function toggleFullscreen() {
+    let fs = fullscreen();
+    fullscreen(!fs);
+    // if (!fs) {
+    //     resizeCanvas(windowWidth, windowHeight);
+    //     updateElementsSize(windowWidth, windowHeight);
+    // } else {
+    //     resizeCanvas(1600, 900); // Restore to original size
+    //     updateElementsSize(1600, 900);
+    // }
+}
+
+function updateElementsSize(newWidth, newHeight) {
+    // Update the size and position of elements based on the new canvas size
+    ground = new Ground(newWidth / 2, newHeight - 10, newWidth, 20, material_grass);
+    
+    if (bird) {
+        Body.setPosition(bird.body, { x: newWidth * 0.1, y: newHeight * 0.5 });
+    }
+
+    pigs.forEach(pig => {
+        Body.setPosition(pig.body, { x: pig.body.position.x * (newWidth / width), y: pig.body.position.y * (newHeight / height) });
+    });
+
+    boxes.forEach(box => {
+        Body.setPosition(box.body, { x: box.body.position.x * (newWidth / width), y: box.body.position.y * (newHeight / height) });
+    });
+
+    // Update other elements similarly...
+}
+
+function drawPreviousBirdPath() {
+  push();
+  stroke(200);
+  strokeWeight(5);
+  noFill();
+  for (let i = 0; i < previousBirdPath.length; i++) {
+      point(previousBirdPath[i].x, previousBirdPath[i].y);
+  }
+  pop();
+}
