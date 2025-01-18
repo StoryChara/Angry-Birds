@@ -27,28 +27,6 @@ function storyMusic(){
   });
 }
 
-function winMusic(){
-  music.song.stop();
-  music.song.setLoop(false);
-  music.song.setPath("resources/sound_effect/level_clear_military.mp3", () => {
-    music.song.play();
-    music.song.onended(function () {
-      music.song.stop();
-    });
-  });
-}
-
-function loseMusic(){
-  music.song.stop();
-  music.song.setLoop(false);
-  music.song.setPath("resources/sound_effect/level_failed_piglets.mp3", () => {
-    music.song.play();
-    music.song.onended(function () {
-      music.song.stop();
-    });
-  });
-}
-
 function winGameMusic(){
   music.song.stop();
   music.song.setLoop(false);
