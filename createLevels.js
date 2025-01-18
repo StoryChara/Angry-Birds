@@ -4,7 +4,8 @@ function create_lvl(lvl){
   if (lvl===1){
     create_lvl1();
   } else {
-    showGameFinished();
+    menu = 'Game Finished';
+    winGameMusic();
   }
 }
 

@@ -59,4 +59,29 @@ function level() {
     imageMode(CENTER);
     image(sprites.slingshot_f, 155, 390, 50, 100);
     pop();
+    
+    drawResetButton(); 
+    drawScore();
+    drawSettingsButton();
+    drawSettingsPanel();
+    if (birdLaunched && !birdHasCollided) {
+        birdPath.push({ x: bird.body.position.x, y: bird.body.position.y });
+    }
+    drawPreviousBirdPath(); // Always draw the previous bird path
+    drawBirdPath(); // Always draw the bird path
+    if (allPigsDead() && !showGameFinishedScreen) { 
+        showScore(score); // Mostrar el puntaje cuando todos los pigs estén muertos
+        showScoreScreen = true; // Set showScoreScreen to true
+    }   
+    if (birdsXgame <= 0 && pigs.some(pig => !pig.isDead)) {
+       showLevelLost(score); // Continuously show level lost screen
+    }
+}
+
+function menu_GameFinished(){
+    push();
+    imageMode(CORNER);
+    image(scenarios.sky, 0, 0, width, height);
+    pop();
+    showGameFinished();
 }

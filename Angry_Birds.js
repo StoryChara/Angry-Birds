@@ -145,25 +145,8 @@ function draw() {
       menu_intro();
   } else if (menu === 'Level') {
       level();
-      drawResetButton(); 
-      drawScore();
-      drawSettingsButton();
-      drawSettingsPanel();
-      if (birdLaunched && !birdHasCollided) {
-          birdPath.push({ x: bird.body.position.x, y: bird.body.position.y });
-      }
-      drawPreviousBirdPath(); // Always draw the previous bird path
-      drawBirdPath(); // Always draw the bird path
-      if (allPigsDead() && !showGameFinishedScreen) { 
-          showScore(score); // Mostrar el puntaje cuando todos los pigs estén muertos
-          showScoreScreen = true; // Set showScoreScreen to true
-      }   
-      if (!showScoreScreen && showGameFinishedScreen) {
-          nextLevel();  
-      }
-      if (birdsXgame <= 0 && pigs.some(pig => !pig.isDead)) {
-          showLevelLost(score); // Continuously show level lost screen
-      }
+  } else if (menu === 'Game Finished'){
+    menu_GameFinished();
   }
 }
 

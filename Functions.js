@@ -202,9 +202,8 @@ function closebuttom(){
 function allPigsDead() {
   return pigs.every(pig => pig.isDead);
 }
+
 function showScore(score) {
-  
-    
   const rectWidth = width * 0.6; // Hacer el rectángulo más grande
   const rectHeight = height * 0.6; // Hacer el rectángulo más grande
   const rectX = (width - rectWidth) / 2;
@@ -306,9 +305,10 @@ function launchBird() {
 }
 
 function nextLevel() {
-  actual_level ++;
+  actual_level += 1;
   create_lvl(actual_level);
-}      
+}
+
 function showGameFinished() {
   
   const rectWidth = width * 0.6;
