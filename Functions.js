@@ -1,5 +1,7 @@
 let isMuted = false; // Add this line at the top of the file
 
+let previousBirdPath = [];
+
 function createPattern(img, w, h, scaleFactor = 1) {
     let pg = createGraphics(w, h); // Lienzo del patrón
     let scaledWidth = img.width * scaleFactor; // Ancho reducido
@@ -16,8 +18,11 @@ function createPattern(img, w, h, scaleFactor = 1) {
   
 function generate_Red(){
     bird = new Bird(150, 350, 15, 2, sprites.red);
+    if (birdPath.length > 0) {
+        previousBirdPath = birdPath; // Store the current path as the previous path
+    }
+    birdPath = []; // Clear the bird path when a new bird is generated
     slingShot.attach(bird);
-    birdsXgame -= 1;
 }
 
 function remove_Red(){
@@ -173,7 +178,7 @@ function showScore(score) {
   fill(255);
   noStroke();
   textAlign(CENTER, CENTER);
-  textSize(32);
+  textSize(height*0.07);
   text("Nivel Completo", rectX + rectWidth / 2, rectY + rectHeight * 0.2);
   text(`Puntaje: ${score}`, rectX + rectWidth / 2, rectY + rectHeight / 2);
 
@@ -186,7 +191,8 @@ function showScore(score) {
   fill(0, 0, 255);
   rect(restartButtonX, buttonY, buttonWidth, buttonHeight);
   fill(255);
-  textSize(20);
+  textAlign(CENTER, CENTER);
+  textSize(height*0.035);
   text("Reiniciar", restartButtonX + buttonWidth / 2, buttonY + buttonHeight / 2);
 
   // Botón de siguiente nivel
@@ -194,7 +200,8 @@ function showScore(score) {
   fill(0, 0, 255);
   rect(nextLevelButtonX, buttonY, buttonWidth, buttonHeight);
   fill(255);
-  textSize(20);
+  textAlign(CENTER, CENTER);
+  textSize(height*0.035);
   text("Siguiente Nivel", nextLevelButtonX + buttonWidth / 2, buttonY + buttonHeight / 2);
 
   showScoreScreen = true; 
@@ -203,16 +210,62 @@ function showScore(score) {
   
 }
 
+function showLevelLost(score) {
+    if (birdsXgame <= 0 && pigs.some(pig => !pig.isDead)) {
+        const rectWidth = width * 0.6; // Hacer el rectángulo más grande
+        const rectHeight = height * 0.6; // Hacer el rectángulo más grande
+        const rectX = (width - rectWidth) / 2;
+        const rectY = (height - rectHeight) / 2;
 
+        push();
+        fill(0, 0, 0, 200); // Fondo negro con transparencia
+        stroke(255);
+        strokeWeight(4);
+        rect(rectX, rectY, rectWidth, rectHeight, 10);
+
+        fill(255);
+        noStroke();
+        textAlign(CENTER, CENTER);
+        textSize(height * 0.07);
+        text("Nivel Perdido", rectX + rectWidth / 2, rectY + rectHeight * 0.2);
+        text(`Puntaje: ${score}`, rectX + rectWidth / 2, rectY + rectHeight / 2);
+
+        // Botón de reiniciar
+        const buttonWidth = rectWidth * 0.3; // Hacer los botones más pequeños
+        const buttonHeight = rectHeight * 0.1;
+        const buttonY = rectY + rectHeight - buttonHeight - 20; // Misma altura en y para ambos botones
+
+        const restartButtonX = rectX + (rectWidth - buttonWidth) / 2;
+        fill(0, 0, 255);
+        rect(restartButtonX, buttonY, buttonWidth, buttonHeight);
+        fill(255);
+        textAlign(CENTER, CENTER);
+        textSize(height * 0.035);
+        text("Reiniciar", restartButtonX + buttonWidth / 2, buttonY + buttonHeight / 2);
+
+        showScoreScreen = true;
+
+        pop();
+    }
+}
+
+function launchBird() {
+    birdLaunched = true;
+    console.log(`Birds remaining: ${birdsXgame}`);
+    setTimeout(() => {
+        World.remove(world, bird.body);
+        if (birdsXgame > 0) {
+            generate_Red();
+            setTimeout(() => {
+                birdsXgame -= 1;
+            }, 5000);
+        }
+    }, 5000); // Remove bird and generate a new one after 5 seconds
+}
 
 function nextLevel() {
-  
     showGameFinished();
-    
-  }
-      
-
-
+}      
 function showGameFinished() {
   
   const rectWidth = width * 0.6;

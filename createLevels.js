@@ -2,7 +2,7 @@ let translado = 0;
 
 function create_lvl1() {
   ground = new Ground(width/3, height *0.90,width+1000, height*0.15,material_grass);
-  birdsXgame = 3;
+  birdsXgame = 2;
   bird = new Bird(width *0.21, height*0.68, height * 0.033,2, sprites.red);
   slingShot = new SlingShot(bird);
   
@@ -38,7 +38,7 @@ function create_lvl1() {
 
 function create_lvl() {
   ground = new Ground(width/3, height *0.90,width+1000, height*0.15,material_grass);
-  birdsXgame = 3;
+  birdsXgame = 2;
   bird = new Bird(width *0.2, height*0.68, height * 0.033,2, sprites.red);
   slingShot = new SlingShot(bird);
     boxes = [

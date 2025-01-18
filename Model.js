@@ -101,6 +101,8 @@ class SlingShot {
          this.sling.bodyB = null;
          birdFlySE();
          birdLaunched = true;
+         launchBird(); // Call launchBird when the bird is launched
+         showLevelLost();
       }
     }
     

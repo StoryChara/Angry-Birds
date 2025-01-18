@@ -46,7 +46,7 @@ function preload(){
 }
 
 function setup() {
-  const canvas = createCanvas(1600, 900);
+  const canvas = createCanvas(800, 450);
   canvas.parent('canvas-container');
   
   material_wood = { 
@@ -106,18 +106,30 @@ function draw() {
       if (birdLaunched && !birdHasCollided) {
           birdPath.push({ x: bird.body.position.x, y: bird.body.position.y });
       }
-      drawBirdPath();
-       if (allPigsDead() && !showGameFinishedScreen) { 
-           showScore(score); // Mostrar el puntaje cuando todos los pigs estén muertos
-           showScoreScreen = true; // Set showScoreScreen to true
-      }   if(!showScoreScreen && showGameFinishedScreen)
-       {
-           nextLevel();  
-       }
-      
-          
-      
+      drawPreviousBirdPath(); // Always draw the previous bird path
+      drawBirdPath(); // Always draw the bird path
+      if (allPigsDead() && !showGameFinishedScreen) { 
+          showScore(score); // Mostrar el puntaje cuando todos los pigs estén muertos
+          showScoreScreen = true; // Set showScoreScreen to true
+      }   
+      if (!showScoreScreen && showGameFinishedScreen) {
+          nextLevel();  
+      }
+      if (birdsXgame <= 0 && pigs.some(pig => !pig.isDead)) {
+          showLevelLost(score); // Continuously show level lost screen
+      }
   }
+}
+
+function drawPreviousBirdPath() {
+  push();
+  stroke(200);
+  strokeWeight(5);
+  noFill();
+  for (let i = 0; i < previousBirdPath.length; i++) {
+      point(previousBirdPath[i].x, previousBirdPath[i].y);
+  }
+  pop();
 }
 
 function mousePressed() {
